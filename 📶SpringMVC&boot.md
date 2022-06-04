@@ -141,6 +141,68 @@ MVC核心思想：模型-视图-控制器
 
 ```
 
+servlet-config.xml
+
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                           http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--开启扫描器-->
+    <context:component-scan base-package="com.xxxx.springmvc.controller"/>
+    <!--使用默认的servlet响应文件-->
+    <mvc:default-servlet-handler/>
+    <!--开启注解驱动-->
+    <mvc:annotation-driven/>
+    <!--配置视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          id="internalResourceViewResolver">
+        <!--前缀：在WEB-INF目录下的jsp目录下-->
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <!--后缀：以.jsp结尾的资源-->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+
+    <!--拦截器配置-->
+   <!-- <mvc:interceptors>
+        &lt;!&ndash;直接定义在标签中，拦截器会拦截所有请求&ndash;&gt;
+        &lt;!&ndash;<bean class="com.xxxx.springmvc.interceptor.MyInterceptor01"/>&ndash;&gt;
+        <mvc:interceptor>
+            &lt;!&ndash;通过 mvc:mapping 配置需要被拦截的资源，支持通配符，可配置多个&ndash;&gt;
+            &lt;!&ndash;“/**” 表示拦截项目下所有&ndash;&gt;
+            <mvc:mapping path="/**"/>
+            &lt;!&ndash;可通行的资源：&ndash;&gt;
+            <mvc:exclude-mapping path="/test/*"/>&lt;!&ndash;注意：这里是url，用的是RequestMapping下的路径&ndash;&gt;
+            <bean class="com.xxxx.springmvc.interceptor.MyInterceptor01"/>
+        </mvc:interceptor>
+    </mvc:interceptors>-->
+    <!--非法访问拦截器-->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/userInfo/login"/>
+            <bean class="com.xxxx.springmvc.interceptor.LoginInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <!--文件上传的配置-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize">
+            <value>104857600</value><!--允许文件上传的最大尺寸-->
+        </property>
+        <property name="maxInMemorySize">
+            <value>4096</value><!--大于值生成硬盘临时文件，小于时保存在内存中-->
+        </property>
+    </bean>
+</beans>
+```
+
 控制器
 
 ```java
@@ -1656,3 +1718,192 @@ public @interface MyCompScan {
 ### MVC零配置
 
 <img src="C:/Users/祝金良/AppData/Roaming/Typora/typora-user-images/image-20220531193501087.png" alt="image-20220531193501087"  />
+
+#### 创建Spring MVC工程
+
+#### pom.xml
+
+```xml
+<properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-web -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>5.3.19</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+      <version>5.3.18</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>springboot02</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <encoding>UTF-8</encoding>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+```
+
+#### 源代码
+
+```java
+@Controller
+@RequestMapping("/index")
+public class HelloController {
+    public String index(){
+        return "index";
+    }
+}
+```
+
+#### 视图
+
+```jsp
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>Title</title>
+</head>
+<body>
+    <h2> hello MVC!</h2>
+</body>
+</html>
+```
+
+#### SpringMVC配置类
+
+​		Spring Mvc配置信息MvcConfig文件添加，作为Mvc框架环境，原来是通过xml来进行配置(视图解析器、Json转换器、文件上传解析器等)，这里基于注解通过继承`WebMvcConfigurerAdapter`类并重写相关方法来进行配置(注意通过`@EnableWebMvc`注解来启动MVC环境)。
+
+```java
+@Configuration
+@EnableWebMvc//代表springMVC配置
+@ComponentScan("com.xxxx")
+public class MvcConfig {
+    //视图解析器
+    @Bean//将方法返回值交给ioc维护
+    public InternalResourceViewResolver viewResolver(){
+        InternalResourceViewResolver viewResolver  = new InternalResourceViewResolver();
+        viewResolver.setSuffix(".jsp");
+        viewResolver.setPrefix("/WEB-INF/views");
+        return viewResolver;
+    }
+}
+```
+
+对比传统servlet-config.xml  的视图解析器配置
+
+```xml
+ <!--开启扫描器-->
+    <context:component-scan base-package="com.xxxx.springmvc.controller"/>
+    <!--使用默认的servlet响应文件-->
+    <mvc:default-servlet-handler/>
+    <!--开启注解驱动-->
+    <mvc:annotation-driven/>
+    <!--配置视图解析器-->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          id="internalResourceViewResolver">
+        <!--前缀：在WEB-INF目录下的jsp目录下-->
+        <property name="prefix" value="/WEB-INF/jsp/"/>
+        <!--后缀：以.jsp结尾的资源-->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+```
+
+#### Web.xml配置类
+
+```java
+//实现WebApplicationInitializer接口的类，可以在web应用启动时加载
+public class WebInitializer implements WebApplicationInitializer {
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        //得到spring应用的上下文环境
+        AnnotationConfigWebApplicationContext ac = new AnnotationConfigWebApplicationContext();
+        //注册MVC的配置类
+        ac.register(MvcConfig.class);
+        //设置servletContext的上下文环境
+        ac.setServletContext(servletContext);
+        //配置转发器
+        ServletRegistration.Dynamic servlet = servletContext.addServlet("dispatcher",new DispatcherServlet(ac));
+        //配置映射路径
+        servlet.addMapping("/");
+        //启动时实例化Bean
+        servlet.setLoadOnStartup(1);
+    }
+}
+```
+
+对比之前的xml配置
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+         http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+  <filter>
+    <description>char encoding filter</description>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!--Servlet请求分发器-->
+  <servlet>
+    <servlet-name>springMvc</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:servlet-context.xml</param-value><!--需要在resource目录下的servlet-context.xml文件-->
+    </init-param>
+    <!--表示启动容器时初始化Servlet-->
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>springMvc</servlet-name>
+    <!--这是拦截请求，"/"代表拦截所有请求，"*.do"表示拦截所有.do请求-->
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+</web-app>
+```
+
+#### 部署

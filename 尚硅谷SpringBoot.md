@@ -1,4 +1,4 @@
-﻿﻿﻿## 01、基础入门-SpringBoot2课程介绍
+## 01、基础入门-SpringBoot2课程介绍
 
 1. Spring Boot 2核心技术
 
@@ -488,9 +488,6 @@ public class MainApplication {
 	- 配置 类组件之间**无依赖关系**用Lite模式加速容器启动过程，减少判断
 	- 配置 类组件之间**有依赖关系**，方法会被调用得到之前单实例组件，用Full模式（默认）
 
-> lite 英 [laɪt]   美 [laɪt]  
-> adj. 低热量的，清淡的(light的一种拼写方法);类似…的劣质品
-
 ---
 
 IDEA快捷键：
@@ -675,6 +672,8 @@ public class Car {
 ---
 
 Spring Boot另一种配置配置绑定：
+
+假如第三方的组件没有写Component，但还是想将此加载在容器中
 
 @EnableConfigurationProperties + @ConfigurationProperties
 

@@ -362,7 +362,6 @@ IDEA快捷键：
 - 自动配好SpringMVC
 	- 引入SpringMVC全套组件
 	- 自动配好SpringMVC常用组件（功能）
-
 - 自动配好Web常见功能，如：字符编码问题
 	- SpringBoot帮我们配置好了所有web开发的常见场景
 

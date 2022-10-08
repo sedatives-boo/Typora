@@ -1083,7 +1083,7 @@ Post 请求在tomcat8以上或7以下都有乱码问题：
 	request.setCharacterEncoding("UTF-8");
 GET 请求在tomcat7及以下出现乱码，所以需要先得到服务器版本号再处理
 */
-@WevFilter("/*")
+@WebFilter("/*")
 public class AEncodingFilter implements Filter{
     public AEcondingFilter(ServletRequest arg0, ServletResponse arg1, filterChain chain) throws Exceotion{}
     public void destroy(){}

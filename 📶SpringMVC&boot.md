@@ -28,7 +28,7 @@ MVC核心思想：模型-视图-控制器
 1. 首先用户发送请求， 请求被SpringMvc前端控制器(DispatherServlet) 捕获;
 2. 前端控制器(DispatherServlet)对请求URL解析获取请求URI，根据URI，调用HandlerMapping;
 3. 前端控制器(DispatherServlet)获得返回的HandlerExecutionChain (包括Handler对象以及 Handler对象对应的拦截器) ;
-4. DispatcherServlet根据获得的HandlerExecutionChain,选择-个合适的HandlerAdapter。 (附注: 如果成功获得HandlerAdapter后，此时将开始执行拦截器的preHandlel..)方法) ;
+4. DispatcherServlet根据获得的HandlerExecutionChain,选择-个合适的HandlerAdapter。 (附注: 如果成功获得HandlerAdapter后，此时将开始执行拦截器的preHandler)方法) ;
 5. HandlerAdapter根据请求的Handler适配并执行对应的Handler; HandlerAdapter(提取Request中的模型数据，填充Handler入参,开始执行Handler (Controller)。 在填充Handler的入参过程中, 根据配置, Spring将做-些额外的工作:
    		HttpMessageConveter:将请求消息 (如Json. xml等数据) 转换成-个对象，将对象转换为指定的响应信息。
       		数据转换:对请求消息进行数据转换。如String转换成Integer. Double等数据格式化:

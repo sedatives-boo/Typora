@@ -1,3 +1,5 @@
+课程：[基础篇-04.初识Redis-安装Redis及启动的三种方式_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1cr4y1671t/?p=5&spm_id_from=pageDriver&vd_source=f8162a7ce0d3ea0e5a0b84979782b852)
+
 # 一、Redis入门
 
 ## 1.认识NoSQL

@@ -289,6 +289,7 @@ select xxx for upadte;
 
 
 
+
 一、注解详解（配备了完善的释义）------(可采用ctrl+F 来进行搜索哦~~~~)
 
 `@SpringBootApplication`：申明让spring boot自动给程序进行必要的配置，这个配置等同于：
@@ -698,5 +699,87 @@ Java堆 = 老年代 + 新生代
 
 ### python项目呢？其他项目呢？
 
+# 携住一面
 
+### 操作系统分类
+
+### 操作系统内核
+
+### Linux和windows区别
+
+### Redis持久化
+
+# 福富笔试
+
+### 不是jsp隐式对象的是
+
+PageContext	**Context**√	application	out
+
+JSP隐含对象是JSP容器为每个页面提供的Java对象，是tomcat在翻译jsp到Java文件阶段给我们创建好的，我们可以直接拿来使用。JSP隐含对象也被称为预定义变量。
+
+> 1.request:相当于servlet中的request作用域
+>         1.1存值：request.setAttribute(name,value);
+>         1.2取值：request.getAttribute(name);
+>
+> 每当客户端请求一个JSP页面时，JSP引擎就会制造一个新的request对象来代表这个请求。
+>
+>  2.response:相当于servlet中的response对象
+>         设置响应类型和编码格式：response.setContentType();
+>                 response.setCharacterEncoding();
+>
+> 服务器创建request对象时会同时创建用于响应这个客户端的response对象。
+>
+> 3.session:相当于servlet中的session作用域
+>         3.1存值：session.setAttribute(name,value);
+>         3.2取值：session.getAttribute(name);
+>
+> 4.application:相当于servlet中servletContext作用域
+>         4.1存值：application.setAttribute(name,value);
+>         4.2取值：application.getAttribute(name);
+>
+> 这个对象在JSP页面的整个生命周期中都代表着这个JSP页面。这个对象在JSP页面初始化时被创建，随着jspDestroy()方法的调用而被移除
+>
+> 通过向application中添加属性，则所有组成您web应用的JSP文件都能访问到这些属性
+>
+>  5.pageContext:也是一个作用域功能对象，作用范围仅限于当前的jsp页面
+>
+>         5.1基本使用
+>             存值：pageContext.setAttribute(name,value);
+>             取值：pageContext.getAttribute(name);
+>
+>
+>         5.2使用pageContext对象操作其他作用域
+>             pageContext.setAttribute(name,value，指定操作哪一个作用域);
+>
+>
+>         5.3按作用域从小到大的顺序搜索命名属性
+>             pageContext.findAttribute(name);  找到则返回，找不到返回null
+>
+> 这个对象主要用来访问页面信息，同时过滤掉大部分实现细节。
+>
+> 这个对象存储了request对象和response对象的引用。application对象，config对象，session对象，out对象可以通过访问这个对象的属性来导出。
+>
+> pageContext对象也包含了传给JSP页面的指令信息，包括缓存信息，ErrorPage URL,页面scope等。
+>
+> 6.out:相当于servletx中response.getWriter()获取输出流作用可以向页面输出结果
+> out 对象是一个输出流，来源于Java.io.Writer类，它用于发送数据输出流到客户端。 out对象用于各种数据的输出
+>
+>  7.config：相当于servletConfig对象 
+> 获取ServletConfig对象 封装了当前servlet在web.xml中的配置信息。
+>
+> 常用的方法有getInitPararneter(String paramNarne) 及getInitPararneternarnes() 等方法。事实上， JSP 页面通常无须配置，也就不存在配置信息。因此，该对象更多地在Servlet 中有效。
+>
+> 8.exception：只有isErrorPage=true的页面才有，封装了捕捉到的页面信息
+> 该实例代表其他页面中的异常和错误。只有当页面是错误处理页面，即编译指令page 的isErrorPage 属性为true 时，该对象才可以使用。常用的方法有getMessageO和printStackTraceO等。
+>
+> 9.page:相当于this，指当前jsp对象
+> 对应this关键字。JSP网页本身 page对象是当前页面转换后的Servlet类的实例。从转换后的Servlet类的代码中，可以看到这种关系： 
+> Object page = this; 
+> 在JSP页面中，很少使用page对象。
+
+### 对象在jvm中三种状态
+
+- 可触及的--从根节点开始可以到达这个对象
+- 可复活--对象没有被任何对象引用（对象所有引用释放），但对象在 finalize()方法中复活
+- 不可触及--对象所有引用释放，finalize()方法被调用，但对象没复活就会进入不可触及状态。不可触及状态对象不可能复活，因为finalize()方法只会调用一次
 
